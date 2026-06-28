@@ -1,51 +1,62 @@
 {% extends 'blog/base.html' %}
 
+{% block title %}{{ post.title }} — My Tech Blog{% endblock %}
+
 {% block content %}
+<div class="page-wrap">
 
-
-        <h1 class='posttitle loader'>{{ post.title }}</h1>
-
-        {% if post.published_date %}
-            <div class="date postdate">
-                {{ post.published_date }}
-            </div>
-
-        {% else %}
-            <a class="btn btn-default" href="{% url 'post_publish' pk=post.pk %}">Publish</a>
-        {% endif %}
-
-      <p class='postcontent' >{{ post.text|safe|linebreaksbr }}</p>
-
-
-      {% if user.is_authenticated %}
-          <a class="btn btn-primary" href="{% url 'post_edit' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
-          <a class="btn btn-primary" href="{% url 'post_remove' pk=post.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+  <header class="post-header">
+    <h1 class="post-title">{{ post.title }}</h1>
+    <div class="post-meta">
+      {% if post.published_date %}
+        <span>{{ post.published_date|date:"F j, Y" }}</span>
+      {% else %}
+        <span style="color:#f59e0b;font-weight:600;">Draft</span>
       {% endif %}
+      <span class="post-meta__dot">·</span>
+      <span>{{ post.approve_comments.count }} comment{{ post.approve_comments.count|pluralize }}</span>
+    </div>
+  </header>
 
+  <div class="post-body">
+    {{ post.text|safe|linebreaksbr }}
+  </div>
 
+  <div class="post-actions">
+    {% if not post.published_date and user.is_authenticated %}
+      <a class="btn btn-primary" href="{% url 'post_publish' pk=post.pk %}">Publish</a>
+    {% endif %}
+    {% if user.is_authenticated %}
+      <a class="btn btn-outline" href="{% url 'post_edit' pk=post.pk %}">✏ Edit</a>
+      <a class="btn btn-ghost" href="{% url 'post_remove' pk=post.pk %}">Delete</a>
+    {% endif %}
+    <a class="btn btn-primary" href="{% url 'add_comment_to_post' pk=post.pk %}" style="margin-left:auto;">+ Comment</a>
+  </div>
 
-  <hr>
-  <a class="btn btn-primary btn-comment" href="{% url 'add_comment_to_post' pk=post.pk %}">Add comment</a>
-  <div class="container">
+  <section class="comments-section">
+    <h3 class="comments-title">Comments</h3>
 
-
-  {% for comment in post.comments.all %}
-  <br>
+    {% for comment in post.comments.all %}
       {% if user.is_authenticated or comment.approved_comment %}
-
-              {{ comment.created_date }}
-              {% if not comment.approved_comment %}
-                  <a class="btn btn-default" href="{% url 'comment_remove' pk=comment.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
-                  <a class="btn btn-default" href="{% url 'comment_approve' pk=comment.pk %}"><span class="glyphicon glyphicon-ok"></span></a>
-              {% endif %}
-
-          <p>{{ comment.text|safe|linebreaks }}</p>
-          <p>Posted by: <strong>{{ comment.author }}</strong></p>
-
+        <div class="comment {% if not comment.approved_comment %}comment--pending{% endif %}">
+          <div class="comment__header">
+            <span class="comment__author">{{ comment.author }}</span>
+            <span class="comment__date">{{ comment.created_date|date:"M j, Y" }}</span>
+            {% if not comment.approved_comment %}
+              <span class="comment__pending-badge">Pending</span>
+              <div class="comment__actions">
+                <a class="btn btn-sm btn-outline" href="{% url 'comment_approve' pk=comment.pk %}" title="Approve">✓ Approve</a>
+                <a class="btn btn-sm btn-ghost" href="{% url 'comment_remove' pk=comment.pk %}" title="Remove">✕</a>
+              </div>
+            {% endif %}
+          </div>
+          <div class="comment__body">{{ comment.text|safe|linebreaks }}</div>
+        </div>
       {% endif %}
-  {% empty %}
-      <p>No comments posted.</p>
-  {% endfor %}
-</div>
+    {% empty %}
+      <p style="color:var(--text-muted);font-size:.9rem;">No comments yet. Be the first!</p>
+    {% endfor %}
+  </section>
 
+</div>
 {% endblock %}

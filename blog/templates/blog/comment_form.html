@@ -1,13 +1,20 @@
 {% extends 'blog/base.html' %}
 
+{% block title %}Add Comment — My Tech Blog{% endblock %}
+
 {% block content %}
-    <h1>New comment</h1>
-    <form method="POST" class="post-form">
-    {% csrf_token %}
-    {{form.as_p}}
-    <button type="submit" class="save btn btn-default">Post Comment</button>
+<div class="page-wrap">
+  <div class="form-card">
+    <h1>Add a Comment</h1>
+
+    <form method="POST">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <div style="display:flex;gap:.75rem;margin-top:1.25rem;">
+        <button type="submit" class="btn btn-primary">Post Comment</button>
+        <a href="javascript:history.back()" class="btn btn-outline">Cancel</a>
+      </div>
     </form>
-
-    <script>var editor = new MediumEditor('.editable');</script>
-
+  </div>
+</div>
 {% endblock %}

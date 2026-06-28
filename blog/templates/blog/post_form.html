@@ -1,14 +1,24 @@
 {% extends 'blog/base.html' %}
 
+{% block title %}{% if form.instance.pk %}Edit Post{% else %}New Post{% endif %} — My Tech Blog{% endblock %}
+
 {% block content %}
-    <h1>New post</h1>
+<div class="page-wrap">
+  <div class="form-card">
+    <h1>{% if form.instance.pk %}Edit Post{% else %}New Post{% endif %}</h1>
 
-    <form method="POST" class="post-form">
-    {% csrf_token %}
-    {{form.as_p}}
-    <button type="submit" class="save btn btn-default">Save</button>
+    <form method="POST">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <div style="display:flex;gap:.75rem;margin-top:1.25rem;">
+        <button type="submit" class="btn btn-primary">Save Post</button>
+        <a href="{% url 'post_list' %}" class="btn btn-outline">Cancel</a>
+      </div>
     </form>
+  </div>
+</div>
 
-    <script>var editor = new MediumEditor('.editable');</script>
-
+<script src="//cdn.jsdelivr.net/medium-editor/latest/js/medium-editor.min.js"></script>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/medium-editor/latest/css/medium-editor.min.css">
+<script>var editor = new MediumEditor('.editable');</script>
 {% endblock %}

@@ -1,11 +1,38 @@
 {% extends 'blog/base.html' %}
 
+{% block title %}Drafts — My Tech Blog{% endblock %}
+
 {% block content %}
-    {% for post in posts %}
-        <div class="post">
-            <p class="date">created: {{ post.created_date|date:'d-m-Y' }}</p>
-            <h1><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h1>
-            <p>{{ post.text|truncatechars:200 }}</p>
-        </div>
-    {% endfor %}
+<div class="page-wrap">
+  <h1 class="page-title">Drafts</h1>
+
+  {% if posts %}
+    <div class="post-feed">
+      {% for post in posts %}
+        <article class="post-card">
+          <div class="post-card__meta">
+            Created {{ post.created_date|date:"F j, Y" }}
+            <span class="draft-badge">Draft</span>
+          </div>
+          <h2 class="post-card__title">
+            <a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a>
+          </h2>
+          <p style="font-size:.88rem;color:var(--text-muted);margin:.4rem 0 .75rem;line-height:1.5;">
+            {{ post.text|truncatechars:180 }}
+          </p>
+          <div class="post-card__footer">
+            <a href="{% url 'post_detail' pk=post.pk %}" class="btn btn-sm btn-outline">View</a>
+            <a href="{% url 'post_edit' pk=post.pk %}" class="btn btn-sm btn-primary">Edit</a>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <h2>No drafts</h2>
+      <p>You don't have any unpublished posts.</p>
+      <a href="{% url 'post_new' %}" class="btn btn-primary" style="margin-top:1.25rem;">+ New Post</a>
+    </div>
+  {% endif %}
+</div>
 {% endblock %}

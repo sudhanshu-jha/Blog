@@ -1,6 +1,16 @@
-{% extends "blog/base.html" %}
-{% block content %}
-<h1>About me</h1>
-<p>Thanks for visiting my blog! Check all this cool stuff about me!</p>
+{% extends 'blog/base.html' %}
 
+{% block title %}About — My Tech Blog{% endblock %}
+
+{% block content %}
+<div class="page-wrap">
+  <div class="about-hero">
+    <h1>About</h1>
+    <p style="color:var(--text-muted);font-size:1.05rem;">A tech blog about things I build and learn.</p>
+  </div>
+  <div class="about-body">
+    <p>Thanks for visiting! This is where I write about software, side projects, and ideas I find interesting.</p>
+    <p>Feel free to leave a comment on any post — I read them all.</p>
+  </div>
+</div>
 {% endblock %}

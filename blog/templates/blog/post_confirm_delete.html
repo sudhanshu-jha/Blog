@@ -1,7 +1,19 @@
-{% extends "blog/base.html" %}
+{% extends 'blog/base.html' %}
+
+{% block title %}Delete Post — My Tech Blog{% endblock %}
+
 {% block content %}
-  <form action="" method="post">{% csrf_token %}
-    <p>Are you sure you want to delete "{{ object }}"?</p>
-    <input class='btn btn-danger' type="submit" value="Confirm" />
-  </form>
+<div class="confirm-wrap">
+  <div class="confirm-card">
+    <h2>Delete post?</h2>
+    <p>"{{ object }}" will be permanently removed and cannot be recovered.</p>
+    <div class="actions">
+      <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Yes, delete</button>
+      </form>
+      <a href="javascript:history.back()" class="btn btn-outline">Cancel</a>
+    </div>
+  </div>
+</div>
 {% endblock %}
